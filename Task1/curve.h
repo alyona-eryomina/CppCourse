@@ -1,40 +1,49 @@
 const float pi = 3.1416f;
 
+class Visitor;
+
 class Curve {
 protected:
 	float area = 0;
 public:
 	virtual ~Curve() {};
-	virtual float get_area() { area = 1.0f; return area; };
+	virtual float get_area() = 0;
+	virtual void accept(Visitor &visitor) = 0;
 };
 
 class Circle : public Curve {
 private:
 	float r;
 public:
-	Circle() { r = 0.1f; }
-	Circle(const float _r) {
-		if (_r <= 0) throw - 1;
-		r = _r;
-	};
-	float get_area() override {
-		area = pi * r * r;
-		return area;
-	}
+	Circle();
+	Circle(const float _r);
+	float get_radius();
+	float get_area();
+	void accept(Visitor &visitor);
 };
 
 class Ellipse : public Curve {
 private:
 	float a, b;
 public:
-	Ellipse() { a = b = 0.1f; }
-	Ellipse(const float _a, const float _b) {
-		if (_a <= 0 || _b <= 0)
-			throw - 1;
-		a = _a; b = _b;
-	}
-	float get_area() override {
-		if (area == 0) area = pi * a * b;
-		return area;
-	}
+	Ellipse();
+	Ellipse(const float _a, const float _b);
+	float get_major_axis();
+	float get_minor_axis();
+	float get_area();
+	void accept(Visitor &visitor);
+};
+
+class Visitor {
+public:
+	virtual ~Visitor() {};
+	virtual void visit(Circle* circle) = 0;
+	virtual void visit(Ellipse* ellipse) = 0;
+};
+
+class RadiusVisitor : public Visitor {
+public:
+	RadiusVisitor() {};
+	void visit(Circle* circle);
+	void visit(Ellipse* ellipse);
 };

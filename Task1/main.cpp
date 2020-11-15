@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <stdlib.h>
 #include "curve.h"
@@ -18,6 +18,12 @@ int main() {
 			Ellipse *a = new Ellipse((float)(temp % 100 / 3 + 1), (float)(temp % 100 / 7 + 1));
 			vector.push_back(static_cast<Curve*>(a));
 		}
+	}
+
+	RadiusVisitor visitor;
+
+	for (int i = 0; i < n; i++) {
+		vector[i]->accept(visitor);
 	}
 
 	// Sort ascending areas
